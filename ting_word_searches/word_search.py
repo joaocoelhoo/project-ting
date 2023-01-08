@@ -7,7 +7,19 @@ def find_ocurrencies(file_lines, word):
     return result
 
 
-def exists_word(word, instance):
+def find_ocurrencies_and_content(file_lines, word):
+    result = []
+    for index, line in enumerate(file_lines):
+        if word.lower() in line.lower():
+            result.append({
+                "linha": index + 1,
+                "conteudo": line
+            })
+
+    return result
+
+
+def find_word(word, instance, with_content):
     queue_size = instance.size()
     queue_range = range(queue_size)
     result = []
@@ -21,7 +33,10 @@ def exists_word(word, instance):
         }
 
         file_lines = file_processed["linhas_do_arquivo"]
-        ocurrencies = find_ocurrencies(file_lines, word)
+        if with_content:
+            ocurrencies = find_ocurrencies_and_content(file_lines, word)
+        else:
+            ocurrencies = find_ocurrencies(file_lines, word)
         search_result["ocorrencias"].extend(ocurrencies)
 
         if search_result["ocorrencias"]:
@@ -30,5 +45,9 @@ def exists_word(word, instance):
     return result
 
 
+def exists_word(word, instance):
+    return find_word(word, instance, False)
+
+
 def search_by_word(word, instance):
-    """Aqui irá sua implementação"""
+    return find_word(word, instance, True)
